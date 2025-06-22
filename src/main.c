@@ -20,7 +20,6 @@ void step(){
 
 int main() {
 
-	// prgm_CleanUp();
 	os_ClrHomeFull();
 	srand(time(NULL));
 
@@ -44,9 +43,10 @@ int main() {
 
 			key = os_GetCSC();
 			intro_loop_render();
+			events();
 
 
-			if(key) intro_loop = false;
+			if(key == sk_Clear || key == sk_Enter ) intro_loop = false;
 
 		}
 
@@ -66,6 +66,7 @@ int main() {
 
 			key = os_GetCSC();
 			game_loop_render();
+			events();
 			
 
 			if(key == sk_Clear) game_loop = false;

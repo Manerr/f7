@@ -1,24 +1,37 @@
 #include <ti/getcsc.h>
+#include <fileioc.h>
+#include <string.h>
 
 #include "core.h"
-// #include "maps.h"
 
-struct player game_player;
+uint16_t files_count;
+uint8_t files_type[256];  
+char files_name[256][8];  
 
+long screen_scroll;
 
-void init_player(){
-	game_player.x = 8;
-	game_player.y = 8;
-	game_player.hp = 24;
-
-}
 
 void init_main(){
 
-	// init_player();
-	// generate_map(1);
+	screen_scroll = 0;
+
+
+	files_count = 0;
+
+	char *var_name;
+	uint8_t var_type;
+	void *vat_ptr = NULL;
+	while ((var_name = ti_DetectAny(&vat_ptr, NULL, &var_type))){
+
+		files_type[files_count] = var_type;
+		strcpy(files_name[files_count],var_name);
+
+		files_count++;
+	}
 
 }
+
+
 
 void events(){
 
@@ -27,16 +40,15 @@ void events(){
 	switch(key){
 
 		case sk_Right:
-			game_player.x++;
 			break;
 		case sk_Left:
-			game_player.x--;
 			break;
 		case sk_Up:
-			game_player.y--;
+			if(screen_scroll == 0) return;
+			screen_scroll--;
 			break;
 		case sk_Down:
-			game_player.y++;
+			screen_scroll++;
 			break;
 
 	}
