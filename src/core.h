@@ -15,7 +15,8 @@ extern uint16_t files_count;
 
 
 extern uint8_t files_type[256];  
-extern char files_name[256][8];  
+extern long files_weight[256];  
+extern char files_name[256][9];  
 
 extern long screen_scroll;
 

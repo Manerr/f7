@@ -35,7 +35,7 @@ uint8_t min(uint8_t a,uint8_t b){
 void initPalette(){
 
 	for (uint8_t i = 0; i < 255; i++){
-		uint8_t c = 255;
+		// uint8_t c = 255;
 		*(gfx_palette + i) = gfx_RGBTo1555(i,i,i);
 	}
 
@@ -49,10 +49,12 @@ void init_renderer(){
 	initPalette();
 	loop_frame = 0;
 	gfx_SetTextFGColor(250);
-	FillScreen(1);
+	gfx_SetColor(20);
 
 	intro_loop_ticks = 0;
 	game_loop_ticks = 0;
+
+	FillScreen(0x00);
 
 
 
@@ -62,12 +64,6 @@ void init_renderer(){
 
 void intro_loop_render(){
 
-	char string[32];
-	// sprintf(string,"Intro frame: %ld",intro_loop_ticks);
-
-	// gfx_SetColor(0);
-	// gfx_FillRectangle(0 , 0 , 144 , 16);
-	// gfx_PrintStringXY(string,0,0);
 
 	char y = -screen_scroll;
 
@@ -75,14 +71,13 @@ void intro_loop_render(){
 
 	for (char index = 0; index < files_count; ++index){
 
-		screen_y = y * 16;
+		screen_y = y * 16 + 10;
 
 		if( screen_y < 0 ) continue;
 		else if( screen_y > 240 ) return;
-		gfx_PrintStringXY(files_name[index],0,screen_y);
+		gfx_FillRectangle(10,screen_y - 3,300,14);
+		gfx_PrintStringXY(files_name[index],20,screen_y);
 		y++;
-		// strcpy(files_name[files_count],var_name);
-
 
 
 	}
@@ -97,7 +92,7 @@ void intro_loop_render(){
 
 void game_loop_render(){
 
-	char string[32];
+	// char string[32];
 	// sprintf(string,"Game frame: %ld",game_loop_ticks);
 
 	// gfx_SetColor(0);

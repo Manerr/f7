@@ -5,8 +5,9 @@
 #include "core.h"
 
 uint16_t files_count;
-uint8_t files_type[256];  
-char files_name[256][8];  
+uint8_t files_type[256];
+long files_weight[256];  
+char files_name[256][9];  
 
 long screen_scroll;
 
@@ -21,12 +22,15 @@ void init_main(){
 	char *var_name;
 	uint8_t var_type;
 	void *vat_ptr = NULL;
+
 	while ((var_name = ti_DetectAny(&vat_ptr, NULL, &var_type))){
 
-		files_type[files_count] = var_type;
-		strcpy(files_name[files_count],var_name);
+		if( var_type == OS_TYPE_APPVAR ){
+			files_type[files_count] = var_type;
+			strcpy(files_name[files_count],var_name);
+			files_count++;
+		}
 
-		files_count++;
 	}
 
 }

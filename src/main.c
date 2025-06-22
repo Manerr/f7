@@ -36,13 +36,18 @@ int main() {
 		//Intro 
 
 		uint8_t key;
+
+		first_draw = true;
 		uint8_t intro_loop = true;
 		intro_loop_ticks = 0;
 
 		while( intro_loop ){
 
 			key = os_GetCSC();
-			intro_loop_render();
+			if(key || first_draw){
+				intro_loop_render();
+				first_draw = false;
+			}
 			events();
 
 
