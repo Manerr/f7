@@ -11,7 +11,7 @@
 void FillScreen(uint8_t color);
 void render_loop();
 void init_renderer();
-void intro_loop_render();
+void files_renderer();
 void game_loop_render();
 
 

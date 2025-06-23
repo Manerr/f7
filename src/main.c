@@ -46,7 +46,7 @@ int main() {
 			key = os_GetCSC();
 			if(key || first_draw){
 				events(key);
-				intro_loop_render();
+				files_renderer();
 				first_draw = false;
 			}
 

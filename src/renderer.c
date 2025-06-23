@@ -61,16 +61,25 @@ void init_renderer(){
 }
 
 
+void human_readable_size(uint16_t size,char string[]){
 
-void intro_loop_render(){
+	if(size < 1024)	sprintf(string,"%d bytes",size);
+	else sprintf(string,"%.1f kilobytes",(float)(size) / 1000);
+	
+	// First i tried a dumb conversion to round .1 ... if someone knows ce's perfomance on this.  
+	// ((uint16_t)(size / 100))/10 );
+
+}
+
+
+void files_renderer(){
 
 	gfx_FillScreen(0);
 
-	char string[64];
-	// gfx_PrintStringXY(string,20,200);
+	char string[32];
 
 	uint16_t screen_y = screen_scroll * 3 - 6;
-
+	uint16_t size;
 
 	for (char index = 0; index < files_count; index++){
 
@@ -78,7 +87,9 @@ void intro_loop_render(){
 		if( screen_y < 0 || screen_y > 238) continue;
 		gfx_FillRectangle(10,screen_y - 3,300,14);
 		gfx_PrintStringXY(files_name[index],20,screen_y);
-		sprintf(string,"%d bytes",files_size[index]);
+
+
+		human_readable_size(files_size[index],string);
 		gfx_PrintStringXY(string,200,screen_y);
 
 	}
