@@ -9,7 +9,7 @@
 
 
 void init_main();
-void events();
+void events(uint8_t key);
 
 extern uint16_t files_count;
 
@@ -18,6 +18,6 @@ extern uint8_t files_type[256];
 extern long files_weight[256];  
 extern char files_name[256][9];  
 
-extern long screen_scroll;
+extern int16_t screen_scroll;
 
 #endif

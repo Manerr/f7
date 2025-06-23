@@ -37,7 +37,7 @@ int main() {
 
 		uint8_t key;
 
-		first_draw = true;
+		bool first_draw = true;
 		uint8_t intro_loop = true;
 		intro_loop_ticks = 0;
 
@@ -45,10 +45,10 @@ int main() {
 
 			key = os_GetCSC();
 			if(key || first_draw){
+				events(key);
 				intro_loop_render();
 				first_draw = false;
 			}
-			events();
 
 
 			if(key == sk_Clear || key == sk_Enter ) intro_loop = false;
@@ -71,7 +71,7 @@ int main() {
 
 			key = os_GetCSC();
 			game_loop_render();
-			events();
+			events(key);
 			
 
 			if(key == sk_Clear) game_loop = false;

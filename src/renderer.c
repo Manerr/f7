@@ -64,21 +64,21 @@ void init_renderer(){
 
 void intro_loop_render(){
 
+	gfx_FillScreen(0);
 
-	char y = -screen_scroll;
+	// char string[64];
+	// gfx_PrintStringXY(string,20,200);
 
-	uint8_t screen_y;
+	uint16_t screen_y = screen_scroll * 2 - 16;
 
-	for (char index = 0; index < files_count; ++index){
+	// sprintf(string,"screen_y: %d",screen_y);
 
-		screen_y = y * 16 + 10;
+	for (char index = 0; index < files_count; index++){
 
-		if( screen_y < 0 ) continue;
-		else if( screen_y > 240 ) return;
+		screen_y += 16;
+		if( screen_y < 0 || screen_y > 238) continue;
 		gfx_FillRectangle(10,screen_y - 3,300,14);
 		gfx_PrintStringXY(files_name[index],20,screen_y);
-		y++;
-
 
 	}
 

@@ -9,7 +9,7 @@ uint8_t files_type[256];
 long files_weight[256];  
 char files_name[256][9];  
 
-long screen_scroll;
+int16_t screen_scroll;
 
 
 void init_main(){
@@ -25,7 +25,9 @@ void init_main(){
 
 	while ((var_name = ti_DetectAny(&vat_ptr, NULL, &var_type))){
 
-		if( var_type == OS_TYPE_APPVAR ){
+		if( var_type == OS_TYPE_APPVAR || var_type == OS_TYPE_PROT_PRGM || var_type == OS_TYPE_PRGM){
+			//Weird files
+			if( var_name[0] == 33 || var_name[0] == 35 ) continue;
 			files_type[files_count] = var_type;
 			strcpy(files_name[files_count],var_name);
 			files_count++;
@@ -37,9 +39,7 @@ void init_main(){
 
 
 
-void events(){
-
-	uint8_t key = os_GetCSC();
+void events(uint8_t key){
 
 	switch(key){
 
@@ -48,7 +48,7 @@ void events(){
 		case sk_Left:
 			break;
 		case sk_Up:
-			if(screen_scroll == 0) return;
+			// if(screen_scroll == 0) return;
 			screen_scroll--;
 			break;
 		case sk_Down:
