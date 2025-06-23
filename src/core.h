@@ -13,9 +13,10 @@ void events(uint8_t key);
 
 extern uint16_t files_count;
 
+extern bool can_scroll_more;
 
 extern uint8_t files_type[256];  
-extern long files_weight[256];  
+extern uint16_t files_size[256];  
 extern char files_name[256][9];  
 
 extern int16_t screen_scroll;
