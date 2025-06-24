@@ -17,19 +17,14 @@ uint8_t loop_frame = 0;
 long intro_loop_ticks;
 long game_loop_ticks;
 
+int16_t screen_y;
+
 
 void FillScreen(uint8_t color)
 {
 	memset(lcd_Ram, color, LCD_SIZE);
 }
 
-
-uint8_t min(uint8_t a,uint8_t b){
-
-	if(a > b) return b;
-	return a;
-
-}
 
 //Will just fill the some of the first entries to have some grayscale colors
 void initPalette(){
@@ -58,7 +53,7 @@ void init_renderer(){
 	gfx_SetTextTransparentColor(0xf0);
 	gfx_SetTextBGColor(0xf0);
 	gfx_SetTextFGColor(255);
-	gfx_SetColor(DARK_GREY);
+	gfx_SetColor(0xFF);
 
 	intro_loop_ticks = 0;
 	game_loop_ticks = 0;
@@ -73,15 +68,23 @@ void init_renderer(){
 
 void draw_menus(){
 
+	for (int i = 0; i < 5; ++i){
 
+		gfx_Rectangle(16 + i * 60 , 220 , 48 , 17);
+
+	}
+
+	gfx_PrintStringXY("Delete",199,225);
+
+	gfx_PrintStringXY("Quit >",262,225);
 
 }
 
 
-void human_readable_size(uint16_t size,char string[]){
+void human_readable_size(float size,char string[]){
 
-	if(size < 1024)	sprintf(string,"%d bytes",size);
-	else sprintf(string,"%.1f kilobytes",(float)(size) / 1000);
+	if(size < 1024)	sprintf(string,"%.0f bytes",size);
+	else sprintf(string,"%.1f kilobytes",size / 1000);
 		// First i tried a dumb conversion to round .1 ... if someone knows ce's perfomance on this.  
 	// ((uint16_t)(size / 100))/10 );
 
@@ -93,13 +96,13 @@ void files_renderer(){
 	char string[32];
 
 	gfx_ZeroScreen();
-	uint16_t screen_y = screen_scroll * 3 - 6;
+	gfx_BlitRectangle(gfx_screen,10,218,300,22);
+	screen_y = - screen_scroll * 3 - 6;
 
 	for (char index = 0; index < files_count; index++){
 
 		screen_y += 16;
-		if( screen_y < 0 || screen_y > 198) continue;
-
+		if( screen_y < 0 || screen_y > 200) continue;
 
 		if( index == current_file_index ){
 
@@ -122,9 +125,8 @@ void files_renderer(){
 	if(screen_y > 184 ) can_scroll_more = true;
 	else can_scroll_more = false;
 
-
-
 	gfx_SwapDraw();
+
 	intro_loop_ticks++;
 }
 

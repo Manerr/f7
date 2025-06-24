@@ -2,7 +2,7 @@
 #include <ti/screen.h>
 #include <ti/getcsc.h>
 #include <sys/lcd.h>
-
+#include <ti/getkey.h>
 
 #include <time.h>
 #include <graphx.h>
@@ -26,7 +26,7 @@ int main() {
 	FillScreen(0x00);
 	init_main();
 	init_renderer();
-
+	gfx_ZeroScreen();
 
 	bool app_loop = true;
 
@@ -35,6 +35,9 @@ int main() {
 		uint8_t key;
 		bool first_draw = true;
 		bool list_loop = true;
+		
+		draw_menus();
+		gfx_SwapDraw();	
 
 		while( list_loop ){
 
@@ -46,11 +49,11 @@ int main() {
 			}
 
 
-			if(key == sk_Clear || key == sk_Enter ) list_loop = false;
+			if(key == sk_Clear || key == sk_Graph  ) list_loop = false;
 
 		}
 
-		if( key == sk_Clear ) {
+		if( key == sk_Clear || key == sk_Graph ) {
 			app_loop = false;
 		}
 
