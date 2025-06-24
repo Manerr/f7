@@ -32,16 +32,11 @@ int main() {
 
 	while (app_loop){
 
-
-		//Intro 
-
 		uint8_t key;
-
 		bool first_draw = true;
-		uint8_t intro_loop = true;
-		intro_loop_ticks = 0;
+		bool list_loop = true;
 
-		while( intro_loop ){
+		while( list_loop ){
 
 			key = os_GetCSC();
 			if(key || first_draw){
@@ -51,32 +46,15 @@ int main() {
 			}
 
 
-			if(key == sk_Clear || key == sk_Enter ) intro_loop = false;
+			if(key == sk_Clear || key == sk_Enter ) list_loop = false;
 
 		}
-
-		uint8_t game_loop = true;
 
 		if( key == sk_Clear ) {
-
 			app_loop = false;
-			game_loop = false;
-
 		}
 
-		//Game loop
 
-		game_loop_ticks = 0;
-		while( game_loop ){
-
-			key = os_GetCSC();
-			game_loop_render();
-			events(key);
-			
-
-			if(key == sk_Clear) game_loop = false;
-
-		}
 
 
 	}
@@ -85,14 +63,6 @@ int main() {
 
 	gfx_End();
 	os_ClrHomeFull();
-
-
-
-	// while (os_GetCSC() != sk_Clear) {
-	// 	render_loop();
-	// 	events();
-	// }
-
 
 	return 0;
 }

@@ -8,6 +8,11 @@
 #define RENDER_HEADER
 
 
+#define LIGHT_BLACK 1
+#define DARK_GREY 2
+#define GREY 3
+#define BRIGHT_GREY 4
+
 void FillScreen(uint8_t color);
 void render_loop();
 void init_renderer();
