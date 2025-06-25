@@ -37,8 +37,12 @@ void events(uint8_t key){
 	switch(key){
 
 		case sk_Right:
+			current_file_index = files_count - 1;
+			screen_scroll = current_file_index * 16 + 8;
 			break;
 		case sk_Left:
+			screen_scroll = 0;
+			current_file_index = 0;
 			break;
 		case sk_Up:
 
@@ -68,10 +72,12 @@ void events(uint8_t key){
 
 
 		//Delete
+		case sk_Del:
 		case sk_Trace:
 			handle_delete(current_file_index);
 			break;
-
+		//Execute - Open
+		case sk_Enter:
 		case sk_Yequ:
 			handle_launch(current_file_index);
 			break;
