@@ -11,6 +11,9 @@ The current builtin one is completely f\*cked up, and is not very usable at all.
 - Displays each file's size in bytes
 - Acts as a shell -> you can launch programs.
 
+## Screenshot:
+
+![image info](./screenshot.png)
 
 ## 🔧 Built With
 
