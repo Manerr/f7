@@ -4,6 +4,8 @@ This is a **work-in-progress** (WIP) file explorer application built for TI CE c
 
 The current builtin one is completely f\*cked up, and is not very usable at all. You don't have search, sorting, or even at least a better UI.
 
+## ⚡Never delete appvars like fileioc or Libload since they're used in the program ( a warning has to be implemented )
+
 
 ## 🚧 Current Features
 
@@ -30,5 +32,4 @@ The current builtin one is completely f\*cked up, and is not very usable at all.
 
 - Not finished , you can only list some of the files and their sizes.
 - Future features may include: renaming, copying, categorization,searching, and sorting.
-
 
