@@ -13,6 +13,8 @@ The current builtin one is completely f\*cked up, and is not very usable at all.
 
 ## Screenshot:
 
+(Actually during the recodring I've jumped to the bottom so don't think there's been a scrolling bug | perf issue 🫡)
+
 ![image info](./screenshot.png)
 
 ## 🔧 Built With
