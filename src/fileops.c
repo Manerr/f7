@@ -1,9 +1,12 @@
 #include <ti/getcsc.h>
 #include <fileioc.h>
 #include <string.h>
+#include <ti/vars.h>
 
 #include "core.h"
+#include "main.h"
 #include "fileops.h"
+#include "renderer.h"
 
 
 void detect_files(){
@@ -20,7 +23,7 @@ void detect_files(){
 
 		if( var_type == OS_TYPE_APPVAR || var_type == OS_TYPE_PROT_PRGM || var_type == OS_TYPE_PRGM){
 			//Weird files
-			if( var_name[0] == 33 || var_name[0] == 35 ) continue;
+			if( var_name[0] == 33 || var_name[0] == 35 || strcmp(var_name,"F7") == 0 ) continue;
 			files_type[files_count] = var_type;
 
 			if( var_type == OS_TYPE_PROT_PRGM || var_type == OS_TYPE_PRGM )file_handler = ti_OpenVar(var_name,"r",var_type);
@@ -49,5 +52,21 @@ void handle_delete(uint16_t tmp_index){
 
 	if(current_file_index < 0) current_file_index = 0;
 	if(screen_scroll < 0) screen_scroll = 0;
+
+}
+
+void handle_launch(uint16_t tmp_index){
+
+
+	end_gfx();
+
+	uint16_t data[] = {current_file_index,current_file_y,screen_scroll};
+
+
+
+	//Idk if putting the main routine as callback is very good (I hope it's not doing a recursive thing lol)
+	int8_t ret = os_RunPrgm(files_name[tmp_index],data,sizeof data,callback_main);
+
+
 
 }

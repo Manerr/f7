@@ -11,13 +11,13 @@ float files_size[1024];
 
 uint16_t current_file_index;
 uint16_t current_file_y;
+uint16_t screen_scroll;
 
 
 char files_name[1024][9]; 
 
 bool can_scroll_more; 
 
-uint16_t screen_scroll;
 
 
 void init_main(){
@@ -47,16 +47,17 @@ void events(uint8_t key){
 
 			screen_scroll--;
 
-			if( current_file_y < 25 ){
-				if(screen_scroll > 5) screen_scroll -=  6;
-				else screen_scroll =0;
+			if( current_file_y < 35 ){
+
+				if(screen_scroll > 8) screen_scroll -=  9;
+				else screen_scroll = 0;
 			}
 
 
 
 			break;
 		case sk_Down:
-			if( current_file_y > 165 ) screen_scroll += 6;
+			if( current_file_y > 160 ) screen_scroll += 12;
 			if( current_file_index < files_count - 1 )	current_file_index++;
 
 			if (!can_scroll_more) return;
@@ -69,6 +70,10 @@ void events(uint8_t key){
 		//Delete
 		case sk_Trace:
 			handle_delete(current_file_index);
+			break;
+
+		case sk_Yequ:
+			handle_launch(current_file_index);
 			break;
 
 	}

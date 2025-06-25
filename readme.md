@@ -9,6 +9,8 @@ The current builtin one is completely f\*cked up, and is not very usable at all.
 
 - Lists all programs and appvars in the archive and RAM. (More filetypes are coming, the fact is just that you'll have a different interaction with them compared to programs and appvars )
 - Displays each file's size in bytes
+- Acts as a shell -> you can launch programs.
+
 
 ## 🔧 Built With
 
@@ -22,6 +24,6 @@ The current builtin one is completely f\*cked up, and is not very usable at all.
 ## 📌 Notes
 
 - Not finished , you can only list some of the files and their sizes.
-- Planned features may include: file opening, deletion, categorization,searching, and sorting.
+- Future features may include: renaming, copying, categorization,searching, and sorting.
 
 

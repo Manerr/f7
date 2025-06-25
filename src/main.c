@@ -13,15 +13,12 @@
 
 void FillScreen(uint8_t color);
 
-
-void step(){
-	return;
-}
-
-int main() {
-
+int callback_main(void *data, int retval){
+	
 	os_ClrHomeFull();
 	srand(time(NULL));
+
+
 
 	FillScreen(0x00);
 	init_main();
@@ -29,6 +26,20 @@ int main() {
 	gfx_ZeroScreen();
 
 	bool app_loop = true;
+
+
+
+
+	//Data sent back by the callback;
+	if(data != NULL){
+		uint16_t *tmp_data = ((uint16_t*)data);
+		current_file_index = tmp_data[0];
+		current_file_y = tmp_data[1];
+		screen_scroll = tmp_data[2];
+	}
+
+
+
 
 	while (app_loop){
 
@@ -62,10 +73,17 @@ int main() {
 
 	}
 
-
-
 	gfx_End();
 	os_ClrHomeFull();
+}
+
+
+
+
+int main() {
+
+	//Same subroutine used in main and subprograms' returns.
+	callback_main(NULL,0);
 
 	return 0;
 }

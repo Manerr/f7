@@ -4,8 +4,9 @@
 
 NAME = f7
 ICON = icon.png
-DESCRIPTION = "f7 by Paul_T_"
+DESCRIPTION = "File explorer for ticalcs"
 COMPRESSED = NO
+OUTPUT_MAP = NO
 
 CFLAGS = -Wall -Wextra -Oz
 CXXFLAGS = -Wall -Wextra -Oz

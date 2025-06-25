@@ -40,6 +40,7 @@ void initPalette(){
 
 }
 
+
 void init_renderer(){
 
 	partial_redraw = true;
@@ -65,6 +66,11 @@ void init_renderer(){
 
 }
 
+void end_gfx(){
+	gfx_End();
+	os_ClrHomeFull();
+}
+
 
 void draw_menus(){
 
@@ -77,6 +83,9 @@ void draw_menus(){
 	gfx_PrintStringXY("Delete",199,225);
 
 	gfx_PrintStringXY("Quit >",262,225);
+
+	gfx_PrintStringXY("Open",24,225);
+
 
 }
 
@@ -104,20 +113,22 @@ void files_renderer(){
 		screen_y += 16;
 		if( screen_y < 0 || screen_y > 200) continue;
 
+		human_readable_size(files_size[index],string);
+	
 		if( index == current_file_index ){
 
 			gfx_SetTextFGColor(0x2e);
 			gfx_PrintStringXY(files_name[index],20,screen_y);
+			gfx_PrintStringXY(string,200,screen_y);
 			gfx_SetTextFGColor(0xff);
 			current_file_y = screen_y;
 
 		}
-		else gfx_PrintStringXY(files_name[index],20,screen_y);
+		else{
+			gfx_PrintStringXY(files_name[index],20,screen_y);
+			gfx_PrintStringXY(string,200,screen_y);
+		}
 
-
-
-		human_readable_size(files_size[index],string);
-		gfx_PrintStringXY(string,200,screen_y);
 
 	}
 

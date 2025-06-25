@@ -20,6 +20,7 @@ void files_renderer();
 void game_loop_render();
 
 void draw_menus();
+void end_gfx();
 
 extern uint8_t loop_frame;
 extern bool partial_redraw;
