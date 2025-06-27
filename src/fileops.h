@@ -13,7 +13,7 @@
 
 void handle_delete(uint16_t tmp_index);
 void handle_launch(uint16_t tmp_index);
-void handle_rename(uint16_t tmp_index);
+void handle_rename(uint16_t tmp_index,char *new_name);
 void detect_files();
 
 

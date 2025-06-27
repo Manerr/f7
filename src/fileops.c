@@ -44,36 +44,10 @@ void detect_files(){
 
 }
 
-void handle_rename(uint16_t tmp_index){
+void handle_rename(uint16_t tmp_index,char *new_name){
 
-	return; // for now
-
-	// gfx_SetColor(0x00);
-	// char name[9];
-	// strcpy(name,files_name[tmp_index]);
-
-	// bool renaming_loop = true;
-
-	// uint16_t key;
-	// gfx_SetTextFGColor(0xf0);
-
-	// while (renaming_loop){
-
-
-
-	// 	rename_renderer(&key,name);
-	// 	key = os_GetKey();
-
-
-	// 	if(key == k_Graph || key == k_Clear || key == k_Window){
-	// 		renaming_loop = false;
-	// 	}
-
-	// }
-
-	// gfx_SetTextFGColor(0xff);
-	// gfx_SetColor(0xFF);
-
+	ti_RenameVar(files_name[tmp_index],new_name,files_type[tmp_index]);
+	detect_files();
 
 }
 
