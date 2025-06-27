@@ -12,10 +12,11 @@ The current builtin one is completely f\*cked up, and is not very usable at all.
 - Lists all programs and appvars in the archive and RAM. (More filetypes are coming, the fact is just that you'll have a different interaction with them compared to programs and appvars )
 - Displays each file's size in bytes
 - Acts as a shell -> you can launch programs.
+- Delete and rename files under a single keypress.
 
 ## Screenshot:
 
-(Actually during the recodring I've jumped to the bottom so don't think there's been a scrolling bug | perf issue 🫡)
+(Actually during the recording I've jumped to the bottom so don't think there's been a scrolling bug | perf issue 🫡) 
 
 ![image info](./screenshot.png)
 
@@ -30,6 +31,6 @@ The current builtin one is completely f\*cked up, and is not very usable at all.
 
 ## 📌 Notes
 
-- Not finished , you can only list some of the files and their sizes.
-- Future features may include: renaming, copying, categorization,searching, and sorting.
-
+- Not finished , you can only list some of the files and their sizes + some basic operation .
+- Future features may include: copying, categorization,searching, and sorting.
+- UI is probably gonna change a little bit. Some icons and a better "global" style is not a option but a duty 🥹

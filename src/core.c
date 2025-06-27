@@ -100,30 +100,133 @@ void events(uint8_t key){
 
 void rename_events(uint8_t key,char *tmp_file_name){
 
+	uint8_t length = strlen(tmp_file_name);
+	char *added_char;
+
+
 	switch(key){
 
 		//Renaming 
 		case sk_Enter:
 		case sk_Yequ:
 
-			// handle_rename(current_file_index);
-			mode = LISTING;
-			break;
+			if( length ){
+				handle_rename(current_file_index,tmp_file_name);
+				current_file_index = files_count - 1;
+				screen_scroll = current_file_index * 4;
+			}
 
 		//Leaving rename
 		case sk_Clear:
 		case sk_Graph:
 
 			mode = LISTING;
-			break;
+			return;
+			// break;
 
 		case sk_Del:
 
+			if( length ) tmp_file_name[length - 1 ] = 0;
+			return;
+			// break;
 
-			strncpy(tmp_file_name, tmp_file_name, strlen(tmp_file_name) - 1 );
+	}	
 
-			break;
 
-	}	 
+
+
+	//Characters input
+	if( length < 8 ){
+
+
+		added_char = 0;
+
+		switch(key){
+
+			case sk_Math:
+				added_char = "A";
+				break;
+			case sk_Apps:
+				added_char = "B";
+				break;
+			case sk_Prgm:
+				added_char = "C";
+				break;
+			case sk_Recip:
+				added_char = "D";
+				break;
+			case sk_Sin:
+				added_char = "E";
+				break;
+			case sk_Cos:
+				added_char = "F";
+				break;
+			case sk_Tan:
+				added_char = "G";
+				break;
+			case sk_Power:
+				added_char = "H";
+				break;
+			case sk_Square:
+				added_char = "I";
+				break;
+			case sk_Comma:
+				added_char = "J";
+				break;
+			case sk_LParen:
+				added_char = "K";
+				break;
+			case sk_RParen:
+				added_char = "L";
+				break;
+			case sk_Div:
+				added_char = "M";
+				break;
+			case sk_Log:
+				added_char = "N";
+				break;
+			case sk_7:
+				added_char = "O";
+				break;
+			case sk_8:
+				added_char = "P";
+				break;
+			case sk_9:
+				added_char = "Q";
+				break;
+			case sk_Mul:
+				added_char = "R";
+				break;
+			case sk_Ln:
+				added_char = "S";
+				break;
+			case sk_4:
+				added_char = "T";
+				break;
+			case sk_5:
+				added_char = "U";
+				break;
+			case sk_6:
+				added_char = "V";
+				break;
+			case sk_Sub:
+				added_char = "W";
+				break;
+			case sk_Store:
+				added_char = "X";
+				break;
+			case sk_1:
+				added_char = "Y";
+				break;
+			case sk_2:
+				added_char = "Z";
+				break;
+		}
+
+		if( added_char) strcat(tmp_file_name,added_char);
+			
+
+	}
+
 
 }

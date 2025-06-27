@@ -36,6 +36,7 @@ extern bool partial_redraw;
 
 extern long intro_loop_ticks;
 extern long game_loop_ticks;
+extern int16_t screen_y;
 
 
 #endif

@@ -42,7 +42,7 @@ void init_rename_rendering(){
 	gfx_FillRectangle(20,220,230,20);
 	gfx_SetColor(0xff);
 	gfx_Rectangle(16, 220 , 48 , 17);
-	gfx_PrintStringXY("Ok",31,225);
+	gfx_PrintStringXY("Ok",32,225);
 
 
 	gfx_SetTextFGColor(0xe8);

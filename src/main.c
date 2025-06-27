@@ -57,6 +57,8 @@ int callback_main(void *data, int retval){
 
 	while (app_loop){
 
+
+
 		uint8_t key;
 		bool first_draw = true;
 		bool list_loop = true;
@@ -103,8 +105,6 @@ int callback_main(void *data, int retval){
 			rename_renderer_cursor(new_file_name);
 
 		}
-
-		list_loop = true;
 
 		leave_rename_rendering();
 
