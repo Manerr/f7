@@ -11,13 +11,17 @@ float files_size[1024];
 
 uint16_t current_file_index;
 uint16_t current_file_y;
-uint16_t screen_scroll;
+int16_t screen_scroll;
 
 
 char files_name[1024][9]; 
 
+char new_file_name[9]; 
+char tmp_name[9]; 
+
 bool can_scroll_more; 
 
+uint8_t mode = LISTING;
 
 
 void init_main(){
@@ -28,8 +32,9 @@ void init_main(){
 
 	detect_files();
 
-}
+	mode = LISTING;
 
+}
 
 
 void events(uint8_t key){
@@ -70,11 +75,17 @@ void events(uint8_t key){
 
 			break;
 
+		//Rename 
+		case sk_Window:
+			mode = RENAMING;
+			break;
 
 		//Delete
 		case sk_Del:
 		case sk_Trace:
+
 			handle_delete(current_file_index);
+			
 			break;
 		//Execute - Open
 		case sk_Enter:
@@ -87,3 +98,32 @@ void events(uint8_t key){
 }
 
 
+void rename_events(uint8_t key,char *tmp_file_name){
+
+	switch(key){
+
+		//Renaming 
+		case sk_Enter:
+		case sk_Yequ:
+
+			// handle_rename(current_file_index);
+			mode = LISTING;
+			break;
+
+		//Leaving rename
+		case sk_Clear:
+		case sk_Graph:
+
+			mode = LISTING;
+			break;
+
+		case sk_Del:
+
+
+			strncpy(tmp_file_name, tmp_file_name, strlen(tmp_file_name) - 1 );
+
+			break;
+
+	}	 
+
+}

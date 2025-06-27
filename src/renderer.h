@@ -21,6 +21,15 @@ void game_loop_render();
 
 void draw_menus();
 void end_gfx();
+void dialog(uint8_t dialog_type);
+
+void rename_renderer(char *name);
+
+void init_rename_rendering();
+void leave_rename_rendering();
+
+void rename_renderer_cursor(char *name);
+
 
 extern uint8_t loop_frame;
 extern bool partial_redraw;

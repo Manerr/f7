@@ -9,16 +9,30 @@
 
 #include "renderer.h"
 #include "core.h"
-
+#include "main.h"
 
 void FillScreen(uint8_t color);
 
-int callback_main(void *data, int retval){
-	
+
+void before_gc(){
+	gfx_End();
 	os_ClrHomeFull();
+}
+
+void after_gc(){
+	callback_main(NULL,0);
+}
+
+
+int callback_main(void *data, int retval){
+
 	srand(time(NULL));
+	os_ClrHomeFull();
 
+	//Prevents the possible gc prompt from being not visible; for now it "destroys" app's state
+	ti_SetGCBehavior(before_gc,NULL);
 
+	
 
 	FillScreen(0x00);
 	init_main();
@@ -50,6 +64,8 @@ int callback_main(void *data, int retval){
 		draw_menus();
 		gfx_SwapDraw();	
 
+
+		//Listing files
 		while( list_loop ){
 
 			key = os_GetCSC();
@@ -60,13 +76,37 @@ int callback_main(void *data, int retval){
 			}
 
 
-			if(key == sk_Clear || key == sk_Graph  ) list_loop = false;
+			if(mode == RENAMING || key == sk_Clear || key == sk_Graph ) list_loop = false;
 
 		}
 
 		if( key == sk_Clear || key == sk_Graph ) {
 			app_loop = false;
 		}
+
+		if( mode == RENAMING ){
+			strcpy(new_file_name,files_name[current_file_index]);
+			init_rename_rendering();
+		}
+
+		first_draw = true;
+
+		//Renaming file
+		while( mode == RENAMING ){
+
+			key = os_GetCSC();
+			if(key || first_draw){
+				rename_events(key,new_file_name);
+				rename_renderer(new_file_name);
+				first_draw = false;
+			}
+			rename_renderer_cursor(new_file_name);
+
+		}
+
+		list_loop = true;
+
+		leave_rename_rendering();
 
 
 
@@ -75,6 +115,9 @@ int callback_main(void *data, int retval){
 
 	gfx_End();
 	os_ClrHomeFull();
+
+	return 0;
+
 }
 
 

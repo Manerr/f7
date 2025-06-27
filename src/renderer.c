@@ -12,10 +12,9 @@
 #include "renderer.h"
 #include "core.h"
 
+uint8_t rename_cursor_tick;
+
 bool partial_redraw;
-uint8_t loop_frame = 0;
-long intro_loop_ticks;
-long game_loop_ticks;
 
 int16_t screen_y;
 
@@ -29,16 +28,79 @@ void FillScreen(uint8_t color)
 //Will just fill the some of the first entries to have some grayscale colors
 void initPalette(){
 
-	*(gfx_palette + 1) = gfx_RGBTo1555(40,40,40);
+	*(gfx_palette + 1) = gfx_RGBTo1555(30,30,30);
 	*(gfx_palette + 2) = gfx_RGBTo1555(90,90,90);
 	*(gfx_palette + 3) = gfx_RGBTo1555(150,150,150);
 	*(gfx_palette + 4) = gfx_RGBTo1555(200,200,200);
 
-	// for (uint8_t i = 0; i < 255; i++){
-	// 	*(gfx_palette + i) = gfx_RGBTo1555(i,i,i);
-	// }
+}
+
+void init_rename_rendering(){
+
+	gfx_SetColor(0);
+
+	gfx_FillRectangle(20,220,230,20);
+	gfx_SetColor(0xff);
+	gfx_Rectangle(16, 220 , 48 , 17);
+	gfx_PrintStringXY("Ok",31,225);
+
+
+	gfx_SetTextFGColor(0xe8);
+	gfx_SetColor(0);
+
+	rename_cursor_tick = 0;
+
+	
+
 
 }
+
+void leave_rename_rendering(){
+
+	gfx_SetTransparentColor(0xf8);
+	gfx_SetTextTransparentColor(0xf8);
+	gfx_SetTextBGColor(0xf8);
+	gfx_SetTextFGColor(255);
+	gfx_SetColor(0xFF);
+
+	draw_menus();
+	gfx_SwapDraw();	
+
+
+}
+
+
+void rename_renderer(char *name){
+
+
+	gfx_SetColor(LIGHT_BLACK);
+	gfx_FillRectangle(20,current_file_y - 2,80,14);
+	gfx_SetColor(0xff);
+	
+	gfx_PrintStringXY(name,20,current_file_y);
+	gfx_BlitBuffer();
+
+
+}
+
+void rename_renderer_cursor(char *name){
+
+	//Cursor
+	if(rename_cursor_tick % 20 > 10){
+		gfx_SetColor(0xff);
+		gfx_FillRectangle(20 + gfx_GetStringWidth(name) ,current_file_y - 2,2,12);
+	}
+	else{
+		gfx_SetColor(LIGHT_BLACK);
+		gfx_FillRectangle(20 + gfx_GetStringWidth(name) ,current_file_y - 2,2,12);
+	}
+
+	rename_cursor_tick++;
+	gfx_BlitBuffer();
+
+}
+
+
 
 
 void init_renderer(){
@@ -49,15 +111,11 @@ void init_renderer(){
 	
 	initPalette();
 
-	loop_frame = 0;
-	gfx_SetTransparentColor(0xf0);
-	gfx_SetTextTransparentColor(0xf0);
-	gfx_SetTextBGColor(0xf0);
+	gfx_SetTransparentColor(0xf8);
+	gfx_SetTextTransparentColor(0xf8);
+	gfx_SetTextBGColor(0xf8);
 	gfx_SetTextFGColor(255);
 	gfx_SetColor(0xFF);
-
-	intro_loop_ticks = 0;
-	game_loop_ticks = 0;
 
 	current_file_y = 0;
 
@@ -74,6 +132,12 @@ void end_gfx(){
 
 void draw_menus(){
 
+	gfx_SetColor(0);
+
+	gfx_FillRectangle(18,220,302,18);
+
+	gfx_SetColor(255);
+
 	for (int i = 0; i < 5; ++i){
 
 		gfx_Rectangle(16 + i * 60 , 220 , 48 , 17);
@@ -85,7 +149,13 @@ void draw_menus(){
 	gfx_PrintStringXY("Quit >",262,225);
 
 	gfx_PrintStringXY("Open",24,225);
+	
+	gfx_PrintStringXY("Rname",80,225);
 
+
+}
+
+void dialog(uint8_t dialog_type){
 
 }
 
@@ -118,10 +188,13 @@ void files_renderer(){
 		if( index == current_file_index ){
 
 			gfx_SetTextFGColor(0x2e);
+			gfx_SetColor(LIGHT_BLACK);
+			gfx_FillRectangle(18,screen_y - 4 , 284,16);			
 			gfx_PrintStringXY(files_name[index],20,screen_y);
 			gfx_PrintStringXY(string,200,screen_y);
 			gfx_SetTextFGColor(0xff);
 			current_file_y = screen_y;
+			gfx_SetColor(0x00);
 
 		}
 		else{
@@ -136,9 +209,9 @@ void files_renderer(){
 	if(screen_y > 184 ) can_scroll_more = true;
 	else can_scroll_more = false;
 
-	gfx_SwapDraw();
+		gfx_SwapDraw();
 
-	intro_loop_ticks++;
+
 }
 
 

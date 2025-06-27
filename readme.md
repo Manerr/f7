@@ -26,7 +26,7 @@ The current builtin one is completely f\*cked up, and is not very usable at all.
 ## 📝 Usage
 
 1. Compile using the CE C Toolchain.
-2. Transfer the `.8xp` file to your calculator using TI-Connect CE, and launch artifice | asmhook to run it. [https://yvantt.github.io/arTIfiCE/)(https://yvantt.github.io/arTIfiCE/)
+2. Transfer the `.8xp` file to your calculator using TI-Connect CE, and launch artifice | asmhook to run it. [https://yvantt.github.io/arTIfiCE/](https://yvantt.github.io/arTIfiCE/)
 
 ## 📌 Notes
 
