@@ -1,6 +1,7 @@
 #include <ti/getcsc.h>
 #include <fileioc.h>
 #include <string.h>
+#include <debug.h>
 
 #include "core.h"
 #include "fileops.h"
@@ -22,6 +23,7 @@ char tmp_name[9];
 bool can_scroll_more; 
 
 uint8_t mode = LISTING;
+bool copying = false;
 
 
 void init_main(){
@@ -79,6 +81,10 @@ void events(uint8_t key){
 		case sk_Window:
 			mode = RENAMING;
 			break;
+		case sk_Zoom:
+			
+			handle_copy(current_file_index);
+			break;
 
 		//Delete
 		case sk_Del:
@@ -110,17 +116,30 @@ void rename_events(uint8_t key,char *tmp_file_name){
 		case sk_Enter:
 		case sk_Yequ:
 
+
 			if( length ){
 				handle_rename(current_file_index,tmp_file_name);
 				current_file_index = files_count - 1;
-				screen_scroll = current_file_index * 4;
+				screen_scroll = current_file_index * 3;
+				mode = LISTING;
+				return;
+			}
+			else{
+				break;
 			}
 
-		//Leaving rename
+		//Leaving rename -- if copying we just delete the tmp file used
 		case sk_Clear:
 		case sk_Graph:
+			if( copying ){
 
+				tmp_file_name[0] = 0;
+				handle_delete(current_file_index);
+				detect_files();
+
+			}
 			mode = LISTING;
+			copying = false;
 			return;
 			// break;
 

@@ -2,6 +2,7 @@
 #include <fileioc.h>
 #include <string.h>
 #include <graphx.h>
+#include <debug.h>
 
 #include <ti/vars.h>
 #include <ti/getkey.h>
@@ -20,7 +21,6 @@ void detect_files(){
 	void *vat_ptr = NULL;
 	uint8_t file_handler;
 
-
 	while ((var_name = ti_DetectAny(&vat_ptr, NULL, &var_type))){
 
 		if( var_type == OS_TYPE_APPVAR || var_type == OS_TYPE_PROT_PRGM || var_type == OS_TYPE_PRGM){
@@ -36,7 +36,7 @@ void detect_files(){
 
 			strcpy(files_name[files_count],var_name);
 			files_count++;
-		
+
 		}
 
 
@@ -50,6 +50,53 @@ void handle_rename(uint16_t tmp_index,char *new_name){
 	detect_files();
 
 }
+
+void handle_copy(uint16_t tmp_index){
+
+
+    uint8_t source, destination;
+    char buffer[128]; 
+    size_t bytesRead;
+
+    uint8_t file_type = files_type[tmp_index];
+    
+    source = ti_OpenVar(files_name[tmp_index], "r",file_type);
+
+    if (!source) {
+        return;
+    }
+
+    //Temp file used for copying - the user will in fact just rename it after lol 
+    destination = ti_OpenVar("F7CPYTMP", "w",file_type);
+    if (!destination) {
+
+        ti_Close(source);
+        ti_Close(destination);
+        return;
+    }
+
+    while ((bytesRead = ti_Read(buffer, 1, sizeof(buffer), source)) > 0) {
+        
+        ti_Write(buffer, 1,bytesRead, destination);
+
+
+    }
+
+    ti_Close(source);
+    ti_Close(destination);
+
+		
+	detect_files();
+
+	current_file_index = files_count - 1;
+	screen_scroll = current_file_index * 3;
+	mode = FAKE_COPYING;
+
+
+
+}
+
+
 
 
 void handle_delete(uint16_t tmp_index){

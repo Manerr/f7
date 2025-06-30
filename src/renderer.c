@@ -150,7 +150,9 @@ void draw_menus(){
 
 	gfx_PrintStringXY("Open",24,225);
 	
-	gfx_PrintStringXY("Rname",80,225);
+	gfx_PrintStringXY("Rname",81,225);
+
+	gfx_PrintStringXY("Copy",144,225);
 
 
 }

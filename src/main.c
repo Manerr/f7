@@ -78,7 +78,7 @@ int callback_main(void *data, int retval){
 			}
 
 
-			if(mode == RENAMING || key == sk_Clear || key == sk_Graph ) list_loop = false;
+			if(mode == RENAMING || mode == FAKE_COPYING || key == sk_Clear || key == sk_Graph ) list_loop = false;
 
 		}
 
@@ -86,9 +86,14 @@ int callback_main(void *data, int retval){
 			app_loop = false;
 		}
 
-		if( mode == RENAMING ){
-			strcpy(new_file_name,files_name[current_file_index]);
+
+
+		if( mode == RENAMING || mode == FAKE_COPYING ){
+			if(mode == FAKE_COPYING) copying = true;
+			files_renderer();
+			draw_menus();
 			init_rename_rendering();
+			mode = RENAMING;
 		}
 
 		first_draw = true;

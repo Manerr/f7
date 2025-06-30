@@ -6,12 +6,13 @@
 
 
 //Modes
-#define LISTING 0
-#define RENAMING 1
 
 #ifndef CORE_H
 #define CORE_H
 
+#define LISTING 0
+#define RENAMING 1
+#define FAKE_COPYING 2
 
 void init_main();
 void events(uint8_t key);
@@ -32,6 +33,7 @@ extern char files_name[1024][9];
 extern int16_t screen_scroll;
 
 extern char new_file_name[9]; 
+extern bool copying;
 
 
 
