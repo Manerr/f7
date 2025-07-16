@@ -194,15 +194,22 @@ void files_renderer(){
 	gfx_BlitRectangle(gfx_screen,10,218,300,22);
 
 	screen_y = 5;
-	dbg_printf("--------------start draw--------------\n");
+	// dbg_printf("--------------start draw--------------\n");
 
 	uint16_t index_max = files_count - 1;
 
 	index_max = min(screen_scroll + 12,files_count);
 
+	gfx_SetColor(0xFF);
+
+	//If there wasnt the float conversion it'd simply gives always 0
+	gfx_FillRectangle_NoClip(299,17 + (int)(171.0 * ( (float)current_file_index / (float)files_count )) , 3,26);			
+
+
+
 	for (uint16_t index = screen_scroll; index < index_max; index++){
 
-		dbg_printf("drawn index: %d\n", index);
+		// dbg_printf("drawn index: %d\n", index);
 
 		screen_y += 16;
 		human_readable_size(files_size[index],string);
@@ -211,9 +218,11 @@ void files_renderer(){
 
 			gfx_SetTextFGColor(0x2e);
 			gfx_SetColor(LIGHT_BLACK);
-			gfx_FillRectangle_NoClip(18,screen_y - 4 , 284,16);			
+			gfx_FillRectangle_NoClip(18,screen_y - 4 , 280,16);			
+
 			gfx_PrintStringXY(files_name[index],20,screen_y);
-			gfx_PrintStringXY(string,223,screen_y);
+			gfx_PrintStringXY(string,219,screen_y);
+
 			gfx_SetTextFGColor(0xff);
 			current_file_y = screen_y;
 			gfx_SetColor(0x00);
@@ -221,7 +230,7 @@ void files_renderer(){
 		}
 		else{
 			gfx_PrintStringXY(files_name[index],20,screen_y);
-			gfx_PrintStringXY(string,223,screen_y);
+			gfx_PrintStringXY(string,219,screen_y);
 		}
 
 
@@ -231,7 +240,7 @@ void files_renderer(){
 
 	gfx_SwapDraw();
 	
-	dbg_printf("--------------end draw--------------\n");
+	// dbg_printf("--------------end draw--------------\n");
 
 
 }
