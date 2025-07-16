@@ -31,7 +31,7 @@ void detect_files(){
 			if( var_type == OS_TYPE_PROT_PRGM || var_type == OS_TYPE_PRGM )file_handler = ti_OpenVar(var_name,"r",var_type);
 			else file_handler = ti_Open(var_name,"r");
 
-			files_size[files_count] = (float)ti_GetSize(file_handler) + 2.0;
+			files_size[files_count] = ti_GetSize(file_handler) + 2.0;
 			ti_Close(file_handler);
 
 			strcpy(files_name[files_count],var_name);
@@ -46,9 +46,13 @@ void detect_files(){
 
 void handle_rename(uint16_t tmp_index,char *new_name){
 
-	ti_RenameVar(files_name[tmp_index],new_name,files_type[tmp_index]);
-	detect_files();
-
+	uint8_t success = ti_RenameVar(files_name[tmp_index],new_name,files_type[tmp_index]);
+	
+	// If success we just rename the displayed names in indexes -> no need to rescan files like before lol
+	// 0 is what the ti's os call success noice 
+	if( success == 0 ) strcpy(files_name[tmp_index],new_name);
+	
+	
 }
 
 void handle_copy(uint16_t tmp_index){
@@ -89,7 +93,7 @@ void handle_copy(uint16_t tmp_index){
 	detect_files();
 
 	current_file_index = files_count - 1;
-	screen_scroll = current_file_index * 3;
+	screen_scroll = SCROLL_BOTTOM;
 	mode = FAKE_COPYING;
 
 
@@ -106,7 +110,7 @@ void handle_delete(uint16_t tmp_index){
 
 	detect_files();
 	current_file_index--;
-	screen_scroll -= 6;
+	screen_scroll--;
 
 	if(current_file_index < 0) current_file_index = 0;
 	if(screen_scroll < 0) screen_scroll = 0;

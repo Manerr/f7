@@ -3,6 +3,8 @@
 #include <ti/getcsc.h>
 #include <sys/lcd.h>
 #include <ti/getkey.h>
+#include <sys/timers.h>
+#include <debug.h>
 
 #include <time.h>
 #include <graphx.h>
@@ -28,6 +30,8 @@ int callback_main(void *data, int retval){
 
 	srand(time(NULL));
 	os_ClrHomeFull();
+
+	timer_Enable(1,TIMER_32K,TIMER_NOINT,TIMER_UP);
 
 	//Prevents the possible gc prompt from being not visible; for now it "destroys" app's state
 	ti_SetGCBehavior(before_gc,NULL);
@@ -66,29 +70,59 @@ int callback_main(void *data, int retval){
 		draw_menus();
 		gfx_SwapDraw();	
 
+		char _string[32];
+		timer_Set(1,0);
 
 		//Listing files
 		while( list_loop ){
 
+
+			//key ticks
+			// timer_Set(1,0);
 			key = os_GetCSC();
 			if(key || first_draw){
+
+				
+				// sprintf(_string,"Get csc %ld\n",timer_Get(1));
+				// dbg_printf(_string);
+
+				// timer_Set(1,0);
 				events(key);
+
+				
+				// sprintf(_string,"event %ld\n",timer_Get(1));
+				// dbg_printf(_string);
+
+				timer_Set(1,0);
+
+
 				files_renderer();
 				first_draw = false;
+
+				sprintf(_string,"draw %ld\n",timer_Get(1));
+				dbg_printf(_string);
+
+				timer_Set(1,0);
+				
+
+
 			}
 
 
-			if(mode == RENAMING || mode == FAKE_COPYING || key == sk_Clear || key == sk_Graph ) list_loop = false;
+			if(mode == RENAMING || mode == FAKE_COPYING || key == sk_Clear || key == sk_Graph || key == sk_Mode) list_loop = false;
 
 		}
 
-		if( key == sk_Clear || key == sk_Graph ) {
+		if( key == sk_Clear || key == sk_Graph || key == sk_Mode) {
 			app_loop = false;
 		}
 
 
 
 		if( mode == RENAMING || mode == FAKE_COPYING ){
+			
+			if(mode == RENAMING) strcpy(new_file_name,files_name[current_file_index]);
+
 			if(mode == FAKE_COPYING) copying = true;
 			files_renderer();
 			draw_menus();
@@ -117,7 +151,6 @@ int callback_main(void *data, int retval){
 
 
 	}
-
 	gfx_End();
 	os_ClrHomeFull();
 

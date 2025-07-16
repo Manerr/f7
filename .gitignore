@@ -6,3 +6,6 @@ src/gfx/*.8xv
 src/maps*
 .DS_Store
 convimg.yaml.lst
+f7.sublime-project
+f7.sublime-workspace
+src/old_F7.8xp

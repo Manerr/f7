@@ -7,6 +7,7 @@
 
 #include <graphx.h>
 #include <stdio.h>
+#include <debug.h>
 
 
 #include "renderer.h"
@@ -39,9 +40,9 @@ void init_rename_rendering(){
 
 	gfx_SetColor(0);
 
-	gfx_FillRectangle(20,220,230,20);
+	gfx_FillRectangle_NoClip(20,220,230,20);
 	gfx_SetColor(0xff);
-	gfx_Rectangle(16, 220 , 48 , 17);
+	gfx_Rectangle_NoClip(16, 220 , 48 , 17);
 	gfx_PrintStringXY("Ok",32,225);
 
 
@@ -85,14 +86,13 @@ void rename_renderer(char *name){
 
 void rename_renderer_cursor(char *name){
 
-	//Cursor
 	if(rename_cursor_tick % 20 > 10){
 		gfx_SetColor(0xff);
-		gfx_FillRectangle(20 + gfx_GetStringWidth(name) ,current_file_y - 2,2,12);
+		gfx_FillRectangle_NoClip(20 + gfx_GetStringWidth(name) ,current_file_y - 2,2,12);
 	}
 	else{
 		gfx_SetColor(LIGHT_BLACK);
-		gfx_FillRectangle(20 + gfx_GetStringWidth(name) ,current_file_y - 2,2,12);
+		gfx_FillRectangle_NoClip(20 + gfx_GetStringWidth(name) ,current_file_y - 2,2,12);
 	}
 
 	rename_cursor_tick++;
@@ -134,13 +134,13 @@ void draw_menus(){
 
 	gfx_SetColor(0);
 
-	gfx_FillRectangle(18,220,302,18);
+	gfx_FillRectangle_NoClip(18,220,302,18);
 
 	gfx_SetColor(255);
 
 	for (int i = 0; i < 5; ++i){
 
-		gfx_Rectangle(16 + i * 60 , 220 , 48 , 17);
+		gfx_Rectangle_NoClip(16 + i * 60 , 220 , 48 , 17);
 
 	}
 
@@ -162,38 +162,58 @@ void dialog(uint8_t dialog_type){
 }
 
 
-void human_readable_size(float size,char string[]){
-
-	if(size < 1024)	sprintf(string,"%.0f bytes",size);
-	else sprintf(string,"%.1f kilobytes",size / 1000);
-		// First i tried a dumb conversion to round .1 ... if someone knows ce's perfomance on this.  
-	// ((uint16_t)(size / 100))/10 );
-
+void human_readable_size(uint16_t size, char *string) {
+    int i = 0;
+    if (size < 1000) {
+        int s = (int)size;
+        if (s >= 100) string[i++] = '0' + (s/100);
+        if (s >= 10)  string[i++] = '0' + ((s/10)%10);
+        string[i++] = '0' + (s%10);
+        memcpy(string + i, " bytes", 6); i += 6;
+        string[i] = 0;
+    } else {
+        int kb10 = (int)((size * 10) / 1000);
+        int kb = kb10 / 10;
+        int dec = kb10 % 10;
+        if (kb >= 100) string[i++] = '0' + (kb/100);
+        if (kb >= 10)  string[i++] = '0' + ((kb/10)%10);
+        string[i++] = '0' + (kb % 10);
+        string[i++] = '.';
+        string[i++] = '0' + dec;
+        memcpy(string + i, " kbytes", 7); i += 7;
+        string[i] = 0;
+    }
 }
 
 
 void files_renderer(){
 
-	char string[32];
+	char string[16];
 
 	gfx_ZeroScreen();
 	gfx_BlitRectangle(gfx_screen,10,218,300,22);
-	screen_y = - screen_scroll * 3 - 6;
 
-	for (char index = 0; index < files_count; index++){
+	screen_y = 5;
+	dbg_printf("--------------start draw--------------\n");
+
+	uint16_t index_max = files_count - 1;
+
+	index_max = min(screen_scroll + 12,files_count);
+
+	for (uint16_t index = screen_scroll; index < index_max; index++){
+
+		dbg_printf("drawn index: %d\n", index);
 
 		screen_y += 16;
-		if( screen_y < 0 || screen_y > 200) continue;
-
 		human_readable_size(files_size[index],string);
 	
 		if( index == current_file_index ){
 
 			gfx_SetTextFGColor(0x2e);
 			gfx_SetColor(LIGHT_BLACK);
-			gfx_FillRectangle(18,screen_y - 4 , 284,16);			
+			gfx_FillRectangle_NoClip(18,screen_y - 4 , 284,16);			
 			gfx_PrintStringXY(files_name[index],20,screen_y);
-			gfx_PrintStringXY(string,200,screen_y);
+			gfx_PrintStringXY(string,223,screen_y);
 			gfx_SetTextFGColor(0xff);
 			current_file_y = screen_y;
 			gfx_SetColor(0x00);
@@ -201,17 +221,17 @@ void files_renderer(){
 		}
 		else{
 			gfx_PrintStringXY(files_name[index],20,screen_y);
-			gfx_PrintStringXY(string,200,screen_y);
+			gfx_PrintStringXY(string,223,screen_y);
 		}
 
 
 	}
 
 
-	if(screen_y > 184 ) can_scroll_more = true;
-	else can_scroll_more = false;
 
-		gfx_SwapDraw();
+	gfx_SwapDraw();
+	
+	dbg_printf("--------------end draw--------------\n");
 
 
 }

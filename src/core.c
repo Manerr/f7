@@ -8,7 +8,7 @@
 
 uint16_t files_count;
 uint8_t files_type[1024];
-float files_size[1024];
+uint16_t files_size[1024];
 
 uint16_t current_file_index;
 uint16_t current_file_y;
@@ -38,6 +38,14 @@ void init_main(){
 
 }
 
+int16_t min(int16_t a,int16_t b){
+	if(a<b) return a;
+	return b;
+}
+int16_t max(int16_t a,int16_t b){
+	if(a>b) return a;
+	return b;
+}
 
 void events(uint8_t key){
 
@@ -49,30 +57,20 @@ void events(uint8_t key){
 			break;
 		case sk_Right:
 			current_file_index = files_count - 1;
-			screen_scroll = current_file_index * 4;
+			screen_scroll = SCROLL_BOTTOM;
 			break;
 		case sk_Up:
 
 			if( current_file_index > 0 ) current_file_index--;
-			if(screen_scroll == 0) return;
-
-			screen_scroll--;
-
-			if( current_file_y < 35 ){
-
-				if(screen_scroll > 8) screen_scroll -=  9;
-				else screen_scroll = 0;
-			}
-
-
+			if( current_file_index < screen_scroll) screen_scroll--;
 
 			break;
 		case sk_Down:
-			if( current_file_y > 160 ) screen_scroll += 12;
+
 			if( current_file_index < files_count - 1 )	current_file_index++;
+			if( current_file_index - screen_scroll > 11  ) screen_scroll++;
 
 			if (!can_scroll_more) return;
-			screen_scroll++;
 			
 
 			break;
@@ -119,8 +117,9 @@ void rename_events(uint8_t key,char *tmp_file_name){
 
 			if( length ){
 				handle_rename(current_file_index,tmp_file_name);
-				current_file_index = files_count - 1;
-				screen_scroll = current_file_index * 3;
+				// We dont need to jump to the end (because of having listed files again)
+				// current_file_index = files_count - 1;
+				// screen_scroll = SCROLL_BOTTOM;
 				mode = LISTING;
 				return;
 			}
