@@ -29,6 +29,7 @@ extern bool can_scroll_more;
 extern uint8_t files_type[1024];  
 extern uint16_t files_size[1024];  
 extern char files_name[1024][9];  
+extern bool files_archived[1024];
 
 extern int16_t screen_scroll;
 
@@ -38,6 +39,13 @@ extern bool copying;
 extern int16_t min(int16_t a,int16_t b);
 
 extern int16_t max(int16_t a,int16_t b);
+
+//WIP not implemented yet
+//Modes to "keep in mind" what the user was doing before a garbage collector -> for example when you copy a file it's sometimes triggered...
+#define GC_COPYING 1;
+
+extern uint8_t before_gc_action;
+
 
 #define SCROLL_BOTTOM max(0,files_count - 12);
 

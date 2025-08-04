@@ -3,12 +3,16 @@
 #include <string.h>
 #include <debug.h>
 
+#include <ti/flags.h>
+
 #include "core.h"
 #include "fileops.h"
 
 uint16_t files_count;
 uint8_t files_type[1024];
 uint16_t files_size[1024];
+bool files_archived[1024];
+
 
 uint16_t current_file_index;
 uint16_t current_file_y;
@@ -22,9 +26,13 @@ char tmp_name[9];
 
 bool can_scroll_more; 
 
+//When the use want to add characters like 1-9 (primary function of keys)
+bool temporaryPrimaryKeys = false;
+
 uint8_t mode = LISTING;
 bool copying = false;
 
+bool switchAlphaMode;
 
 void init_main(){
 
@@ -35,6 +43,10 @@ void init_main(){
 	detect_files();
 
 	mode = LISTING;
+
+	switchAlphaMode = 0;
+
+	// *OS_FLAGS_SHIFT_KEEPALPHA = 1;
 
 }
 
@@ -97,6 +109,11 @@ void events(uint8_t key){
 			handle_launch(current_file_index);
 			break;
 
+		//Des-Archive
+		case sk_Store:
+			handle_archive(current_file_index);
+			break;
+
 	}
 
 }
@@ -105,11 +122,11 @@ void events(uint8_t key){
 void rename_events(uint8_t key,char *tmp_file_name){
 
 	uint8_t length = strlen(tmp_file_name);
-	char *added_char;
 
 
 	switch(key){
 
+		
 		//Renaming 
 		case sk_Enter:
 		case sk_Yequ:
@@ -146,102 +163,147 @@ void rename_events(uint8_t key,char *tmp_file_name){
 
 			if( length ) tmp_file_name[length - 1 ] = 0;
 			return;
-			// break;
+
+		//Switch alpha keys (between upper and lower case)		
+		case sk_2nd:	
+			switchAlphaMode = false;
+			temporaryPrimaryKeys = true; 
+			break;
+
+		//Switch alpha keys (between upper and lower case)		
+		case sk_Alpha:
+
+			switchAlphaMode = !switchAlphaMode; 
+			return;
 
 	}	
 
 
 
+	char added_strings[2];
+	// char added_char = *added_strings;
 
 	//Characters input
 	if( length < 8 ){
 
 
-		added_char = 0;
+		//Idk if numbers are really forbidden for a name's first character , but I decided to disable this feature
+		if( length == 0 && temporaryPrimaryKeys){
+			temporaryPrimaryKeys = false;
+			return;
+		}
+
+		added_strings[0] = 0;
+		added_strings[1] = 0;
+
+		// added_char = 0;
 
 		switch(key){
 
 			case sk_Math:
-				added_char = "A";
+				*added_strings = 65;
 				break;
 			case sk_Apps:
-				added_char = "B";
+				*added_strings = 66;
 				break;
 			case sk_Prgm:
-				added_char = "C";
+				*added_strings = 67;
 				break;
 			case sk_Recip:
-				added_char = "D";
+				*added_strings = 68;
 				break;
 			case sk_Sin:
-				added_char = "E";
+				*added_strings = 69;
 				break;
 			case sk_Cos:
-				added_char = "F";
+				*added_strings = 70;
 				break;
 			case sk_Tan:
-				added_char = "G";
+				*added_strings = 71;
 				break;
 			case sk_Power:
-				added_char = "H";
+				*added_strings = 72;
 				break;
 			case sk_Square:
-				added_char = "I";
+				*added_strings = 73;
 				break;
 			case sk_Comma:
-				added_char = "J";
+				*added_strings = 74;
 				break;
 			case sk_LParen:
-				added_char = "K";
+				*added_strings = 75;
 				break;
 			case sk_RParen:
-				added_char = "L";
+				*added_strings = 76;
 				break;
 			case sk_Div:
-				added_char = "M";
+				*added_strings = 77;
 				break;
 			case sk_Log:
-				added_char = "N";
+				*added_strings = 78;
 				break;
 			case sk_7:
-				added_char = "O";
+				
+				if(temporaryPrimaryKeys) *added_strings = 55;
+				else *added_strings = 79;
 				break;
 			case sk_8:
-				added_char = "P";
+				if(temporaryPrimaryKeys) *added_strings = 56;
+				else *added_strings = 80;
 				break;
 			case sk_9:
-				added_char = "Q";
+				if(temporaryPrimaryKeys) *added_strings = 57;
+				else *added_strings = 81;
 				break;
 			case sk_Mul:
-				added_char = "R";
+				*added_strings = 82;
 				break;
 			case sk_Ln:
-				added_char = "S";
+				*added_strings = 83;
 				break;
 			case sk_4:
-				added_char = "T";
+				if(temporaryPrimaryKeys) *added_strings = 52;
+				else *added_strings = 84;
 				break;
 			case sk_5:
-				added_char = "U";
+				if(temporaryPrimaryKeys) *added_strings = 53;
+				else *added_strings = 85;
 				break;
 			case sk_6:
-				added_char = "V";
+				if(temporaryPrimaryKeys) *added_strings = 54;
+				else *added_strings = 86;
 				break;
 			case sk_Sub:
-				added_char = "W";
+				*added_strings = 87;
 				break;
 			case sk_Store:
-				added_char = "X";
+				*added_strings = 88;
 				break;
 			case sk_1:
-				added_char = "Y";
+				if(temporaryPrimaryKeys) *added_strings = 49;
+				else *added_strings = 89;
 				break;
 			case sk_2:
-				added_char = "Z";
+				if(temporaryPrimaryKeys) *added_strings = 50;
+				else *added_strings = 90;
 				break;
+			case sk_0:
+				if(temporaryPrimaryKeys) *added_strings = 48;
+				break;
+				
 		}
 
-		if( added_char) strcat(tmp_file_name,added_char);
+		
+		if( *added_strings ){
+
+			if( switchAlphaMode ) *added_strings += 32;
+			if(temporaryPrimaryKeys) temporaryPrimaryKeys = false;
+
+			strcat(tmp_file_name,added_strings);
+			
+			added_strings[0] = 0;
+		
+		}
 			
 
 	}

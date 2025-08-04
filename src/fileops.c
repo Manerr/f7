@@ -21,6 +21,8 @@ void detect_files(){
 	void *vat_ptr = NULL;
 	uint8_t file_handler;
 
+	
+
 	while ((var_name = ti_DetectAny(&vat_ptr, NULL, &var_type))){
 
 		if( var_type == OS_TYPE_APPVAR || var_type == OS_TYPE_PROT_PRGM || var_type == OS_TYPE_PRGM){
@@ -32,9 +34,11 @@ void detect_files(){
 			else file_handler = ti_Open(var_name,"r");
 
 			files_size[files_count] = ti_GetSize(file_handler) + 2.0;
+			files_archived[files_count] = ti_IsArchived(file_handler);
 			ti_Close(file_handler);
 
 			strcpy(files_name[files_count],var_name);
+
 			files_count++;
 
 		}
@@ -43,6 +47,7 @@ void detect_files(){
 	}
 
 }
+
 
 void handle_rename(uint16_t tmp_index,char *new_name){
 
@@ -53,6 +58,24 @@ void handle_rename(uint16_t tmp_index,char *new_name){
 	if( success == 0 ) strcpy(files_name[tmp_index],new_name);
 	
 	
+}
+
+
+void handle_archive(uint16_t index){
+
+	uint8_t file_type = files_type[index];
+    uint8_t source = ti_OpenVar(files_name[index], "r",file_type);
+
+	if (!source) {
+        return;
+    }
+
+	bool is_archived = files_archived[index];
+
+	int result = ti_SetArchiveStatus(!is_archived,source);
+	if(result) 	files_archived[index] = !is_archived;
+	
+	ti_Close(source);
 }
 
 void handle_copy(uint16_t tmp_index){
@@ -109,15 +132,18 @@ void handle_delete(uint16_t tmp_index){
 	ti_DeleteVar(files_name[tmp_index],files_type[tmp_index]);
 
 	detect_files();
-	current_file_index--;
+	if(current_file_index) current_file_index--;
 	screen_scroll--;
 
 	if(current_file_index < 0) current_file_index = 0;
 	if(screen_scroll < 0) screen_scroll = 0;
 
+	// dbg_printf("file index=%i, screen_scroll=%i\n",current_file_index,screen_scroll);
+
 }
 
 void handle_launch(uint16_t tmp_index){
+
 
 	if(files_type[tmp_index] == OS_TYPE_APPVAR ) return;
 

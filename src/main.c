@@ -4,7 +4,7 @@
 #include <sys/lcd.h>
 #include <ti/getkey.h>
 #include <sys/timers.h>
-#include <debug.h>
+// #include <debug.h>
 
 #include <time.h>
 #include <graphx.h>
@@ -34,7 +34,7 @@ int callback_main(void *data, int retval){
 	timer_Enable(1,TIMER_32K,TIMER_NOINT,TIMER_UP);
 
 	//Prevents the possible gc prompt from being not visible; for now it "destroys" app's state
-	ti_SetGCBehavior(before_gc,NULL);
+	ti_SetGCBehavior(before_gc,after_gc);
 
 	
 
@@ -70,7 +70,7 @@ int callback_main(void *data, int retval){
 		draw_menus();
 		gfx_SwapDraw();	
 
-		char _string[32];
+		// char _string[32];
 		timer_Set(1,0);
 
 		//Listing files
@@ -99,8 +99,8 @@ int callback_main(void *data, int retval){
 				files_renderer();
 				first_draw = false;
 
-				sprintf(_string,"draw %ld\n",timer_Get(1));
-				dbg_printf(_string);
+				// sprintf(_string,"draw %ld\n",timer_Get(1));
+				// dbg_printf(_string);
 
 				timer_Set(1,0);
 				
@@ -123,7 +123,11 @@ int callback_main(void *data, int retval){
 			
 			if(mode == RENAMING) strcpy(new_file_name,files_name[current_file_index]);
 
-			if(mode == FAKE_COPYING) copying = true;
+			if(mode == FAKE_COPYING){
+
+				strcpy(new_file_name,"");
+				copying = true;
+			}
 			files_renderer();
 			draw_menus();
 			init_rename_rendering();
@@ -137,13 +141,26 @@ int callback_main(void *data, int retval){
 
 			key = os_GetCSC();
 			if(key || first_draw){
+
+
+				timer_Set(1,0);
+
+
 				rename_events(key,new_file_name);
+
+				// sprintf(_string,"rename took %ld\n",timer_Get(1));
+				// dbg_printf(_string);
+
+				timer_Set(1,0);
+				
 				rename_renderer(new_file_name);
 				first_draw = false;
 			}
 			rename_renderer_cursor(new_file_name);
 
 		}
+
+		key = 0;
 
 		leave_rename_rendering();
 

@@ -14,10 +14,10 @@
 #include "core.h"
 
 uint8_t rename_cursor_tick;
-
 bool partial_redraw;
-
 int16_t screen_y;
+
+
 
 
 void FillScreen(uint8_t color)
@@ -146,7 +146,7 @@ void draw_menus(){
 
 	gfx_PrintStringXY("Delete",199,225);
 
-	gfx_PrintStringXY("Quit >",262,225);
+	gfx_PrintStringXY("Quit \x1a",261,225);
 
 	gfx_PrintStringXY("Open",24,225);
 	
@@ -162,8 +162,12 @@ void dialog(uint8_t dialog_type){
 }
 
 
-void human_readable_size(uint16_t size, char *string) {
+void human_readable_size(uint16_t size, char *string,bool archived) {
     int i = 0;
+
+	if( archived ) string[i++] = '\x07';
+	else string[i++] = ' ';
+
     if (size < 1000) {
         int s = (int)size;
         if (s >= 100) string[i++] = '0' + (s/100);
@@ -202,8 +206,8 @@ void files_renderer(){
 
 	gfx_SetColor(0xFF);
 
-	//If there wasnt the float conversion it'd simply gives always 0
-	gfx_FillRectangle_NoClip(299,17 + (int)(171.0 * ( (float)current_file_index / (float)files_count )) , 3,26);			
+	//If there wasnt this dumb multiplcation it'd generally gives 0
+	gfx_FillRectangle_NoClip(299,17 +  166 * ( current_file_index  * 100) / ((files_count - 1) * 100) , 3,26);			
 
 
 
@@ -212,7 +216,7 @@ void files_renderer(){
 		// dbg_printf("drawn index: %d\n", index);
 
 		screen_y += 16;
-		human_readable_size(files_size[index],string);
+		human_readable_size(files_size[index],string,files_archived[index]);
 	
 		if( index == current_file_index ){
 
@@ -221,7 +225,7 @@ void files_renderer(){
 			gfx_FillRectangle_NoClip(18,screen_y - 4 , 280,16);			
 
 			gfx_PrintStringXY(files_name[index],20,screen_y);
-			gfx_PrintStringXY(string,219,screen_y);
+			gfx_PrintStringXY(string,211,screen_y);
 
 			gfx_SetTextFGColor(0xff);
 			current_file_y = screen_y;
@@ -230,7 +234,7 @@ void files_renderer(){
 		}
 		else{
 			gfx_PrintStringXY(files_name[index],20,screen_y);
-			gfx_PrintStringXY(string,219,screen_y);
+			gfx_PrintStringXY(string,211,screen_y);
 		}
 
 
